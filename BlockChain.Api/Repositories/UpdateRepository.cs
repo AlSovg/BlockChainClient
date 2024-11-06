@@ -5,12 +5,12 @@ using BlockChain.Domain.Models.Request;
 namespace BlockChain.Api.Repositories;
 
 
-    public class AuthRepository 
+    public class UpdateRepository 
     {
-        private const string _baseUrl = "https://b1.ahmetshin.com/restapi/";
+        private const string BaseUrl = "https://b1.ahmetshin.com/restapi/";
         private readonly HttpClient _httpClient;
     
-        public AuthRepository(HttpClient httpClient)
+        public UpdateRepository(HttpClient httpClient)
         {
             _httpClient = httpClient;
             _httpClient.DefaultRequestHeaders.Add("mode", "no-cors");
@@ -18,13 +18,17 @@ namespace BlockChain.Api.Repositories;
 
         public async Task<ResponseModel?> GetData(string? jsonData = null)
         {
-            const string url = $"{_baseUrl}get_chains";
-            using var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+            const string url = $"{BaseUrl}get_chains";
+            using var content = new StringContent(jsonData!, Encoding.UTF8, "application/json");
             var response =  await _httpClient.PostAsync(url, content);
             var responseStream = await response.Content.ReadAsStreamAsync();
             var responseString = await response.Content.ReadAsStringAsync();
             var responseContent = await JsonSerializer.DeserializeAsync<ResponseModel>(responseStream);
-            
             return responseContent;
+        }
+
+        public async Task CompareData(ResponseModel responseModel)
+        {
+            
         }
     }

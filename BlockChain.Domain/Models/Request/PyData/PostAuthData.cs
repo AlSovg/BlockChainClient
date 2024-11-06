@@ -14,4 +14,13 @@ public class PostAuthData : AuthData
     [JsonPropertyName("data")]
     public SendTask data { get; set; }
 
+    public PostAuthData(GetAuthData getAuthData)
+    {
+        username = getAuthData.username;
+        password = getAuthData.password;
+        user_hash = getAuthData.user_hash;
+        hach_version_file = getAuthData.hach_version_file;
+        data = getAuthData.data;
+    }
+
 }

@@ -52,8 +52,8 @@ namespace BlockChain.Api
                     options.JsonSerializerOptions.TypeInfoResolverChain.Add(new DefaultJsonTypeInfoResolver());
                 });
 
-            services.AddTransient<AuthRepository>();
-            services.AddHttpClient<AuthRepository>();
+            services.AddTransient<UpdateRepository>();
+            services.AddHttpClient<UpdateRepository>();
 
             services.AddTransient<DbContext, ApplicationContext>();
 

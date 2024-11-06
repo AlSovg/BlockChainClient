@@ -5,6 +5,11 @@ namespace BlockChain.Domain.Models.Request;
 
 public class ResponseModel
 {
+    public ResponseModel(ActiveBlock activeBlock)
+    {
+        ActiveBlock = activeBlock;
+    }
+
     [JsonPropertyName("success")]
     public bool Status { get; set; }
     
