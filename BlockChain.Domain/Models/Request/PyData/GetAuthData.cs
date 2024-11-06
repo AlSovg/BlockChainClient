@@ -12,7 +12,7 @@ public class GetAuthData : AuthData
     public string hach_version_file { get; set; } = string.Empty;
     
     [JsonPropertyName("data")]
-    public string data { get; set; } = string.Empty;
+    public SendTask data { get; set; }
 
 
 }

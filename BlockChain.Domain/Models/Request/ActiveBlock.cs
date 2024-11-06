@@ -6,8 +6,8 @@ namespace BlockChain.Domain.Models.ViewModels;
 
 public class ActiveBlock
 {
-    // [JsonPropertyName("block_active")]
-    // public List<Block> Blocks { get; set; }
+    [JsonPropertyName("block_active")]
+    public List<BlockViewModel> Blocks { get; set; }
     
     [JsonPropertyName("users_block")]
     public List<UserViewModel> Users { get; set; }
