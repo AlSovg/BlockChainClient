@@ -16,13 +16,11 @@ public class UpdateController
 {
     private readonly ILogger<UpdateController> _logger;
     private readonly UpdateRepository _updateRepository;
-    protected readonly ApplicationContext Context;
 
-    public UpdateController(ILogger<UpdateController> logger, UpdateRepository updateRepository, ApplicationContext context)
+    public UpdateController(ILogger<UpdateController> logger, UpdateRepository updateRepository)
     {
         this._logger = logger;
         this._updateRepository = updateRepository;
-        this.Context = context;
     }
     
     [HttpGet]
@@ -37,39 +35,21 @@ public class UpdateController
         var getAuthData = await PythonActions.ExecutePythonScriptAsync() ?? new GetAuthData();
         var postAuthData = new PostAuthData(getAuthData);
         var response = await _updateRepository.GetData(JsonSerializer.Serialize(postAuthData));
-        // if (response!.Status)
-        // {
-        //     return response;
-        // }
-        // _logger.LogError("Ошибка запроса");
+        if (response!.Status)
+        {
+            return response;
+        }
+        _logger.LogError("Ошибка запроса");
         return response;
     }
     
     [HttpGet]
     [Route("CheckData")]
-    public async Task<bool> GetNewDataAsync()
+    public async Task<CompareModel?> GetNewDataAsync()
     {
         var apiData = await GetApiData();
-        var users = apiData?.ActiveBlock.Users.OrderByDescending( u => u.UserId).ToList();
-
-        var dbUsers = await Context.Users
-            .AsNoTracking()
-            .Distinct()
-            .OrderByDescending(u => u.UserId)
-            .Select(x => new UserViewModel(x))
-            .ToListAsync();
-            
-
-        
-        var newUsers = users?.Except(dbUsers, new Comparer.UserComparer()).ToList();
-
-        if (newUsers!.Any())
-        {
-            await Context.Users.AddRangeAsync(newUsers!.Select(user => new User(user)));
-            await Context.SaveChangesAsync();
-        }
-
-        return true;
+        var result = await _updateRepository.CompareData(apiData);
+        return result;
     }
 }
 
