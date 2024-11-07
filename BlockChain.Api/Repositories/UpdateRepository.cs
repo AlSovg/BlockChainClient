@@ -35,6 +35,7 @@ namespace BlockChain.Api.Repositories;
 
         public async Task<CompareModel> CompareData(ResponseModel? responseModel)
         {
+            var response =  new CompareModel();
             var apiUsers = responseModel?.ActiveBlock.Users.OrderByDescending( u => u.UserId).ToList();
             var dbUsers = await Context.Users
                 .AsNoTracking()
@@ -43,11 +44,36 @@ namespace BlockChain.Api.Repositories;
                 .Select(x => new UserViewModel(x))
                 .ToListAsync();
             
+            
             var newUsers = apiUsers?.Except(dbUsers, new Comparer.UserComparer()).ToList();
 
-            if (newUsers!.Count == 0) return new FailCompareModel();
-            await Context.Users.AddRangeAsync(newUsers!.Select(user => new User(user)));
-            await Context.SaveChangesAsync();
-            return new SuccessCompareModel();
+            if (newUsers!.Any())
+            {
+                await Context.Users.AddRangeAsync(newUsers!.Select(user => new User(user)));
+                await Context.SaveChangesAsync();
+                response = new SuccessCompareModel();
+            }
+            
+            var apiBlocks = responseModel?.ActiveBlock.Blocks.OrderByDescending(b => b.BlockId).ToList();
+            
+            var dbBlocks = await Context.Blocks
+                .AsNoTracking()
+                .Distinct()
+                .OrderByDescending(b => b.BlockId)
+                .Select(x => new BlockViewModel(x))
+                .ToListAsync();
+            
+            var newBlocks = apiBlocks?.Except(dbBlocks, new Comparer.BlockComparer()).ToList();
+
+            if (newBlocks!.Any())
+            {
+                await Context.Blocks.AddRangeAsync(newBlocks!.Select(block => new Block(block)));
+                await Context.SaveChangesAsync();
+                response = new SuccessCompareModel();
+            }
+            
+            
+            
+            return response;
         }
     }

@@ -26,4 +26,26 @@ public class Comparer
             }
         }
     }
+    public class BlockComparer : IEqualityComparer<BlockViewModel>
+    {
+        public bool Equals(BlockViewModel x, BlockViewModel y)
+        {
+            return x.BlockId == y.BlockId &&
+                   x.CurHash == y.CurHash &&
+                   x.PrevHash == y.PrevHash &&
+                   x.ValidCount == y.ValidCount &&
+                   x.GenesisBlock == y.GenesisBlock;
+        }
+
+        public int GetHashCode(BlockViewModel obj)
+        {
+            int hash = 17;
+            hash = hash * 23 + obj.BlockId.GetHashCode();
+            hash = hash * 23 + (obj.CurHash?.GetHashCode() ?? 0);
+            hash = hash * 23 + (obj.PrevHash?.GetHashCode() ?? 0);
+            hash = hash * 23 + obj.ValidCount.GetHashCode();
+            hash = hash * 23 + obj.GenesisBlock.GetHashCode();
+            return hash;
+        }
+    }
 }

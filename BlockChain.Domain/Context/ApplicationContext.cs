@@ -6,11 +6,12 @@ namespace BlockChain.Domain.Context;
 
 public class ApplicationContext: DbContext
 {
-    public DbSet<User> Users { get; set; }
-    
-    public DbSet<Block> Blocks { get; set; }
     public ApplicationContext(DbContextOptions<ApplicationContext> options)
         : base(options)
     {
     }
+    
+    public DbSet<User> Users { get; set; }
+    public DbSet<Block> Blocks { get; set; }
+    
 }
