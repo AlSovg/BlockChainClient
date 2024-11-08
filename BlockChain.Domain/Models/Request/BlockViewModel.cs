@@ -1,10 +1,12 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using BlockChain.Domain.Models.DataBase;
 
 namespace BlockChain.Domain.Models.Request;
 
 public class BlockViewModel
 {
+    [Key]
     [JsonPropertyName("dbId")]
     public virtual Guid Id { get; set; } = Guid.NewGuid();
 
@@ -15,7 +17,7 @@ public class BlockViewModel
     public string CurHash { get; set; }
     
     [JsonPropertyName("prev_hash")]
-    public string PrevHash { get; set; } 
+    public string? PrevHash { get; set; } 
     
     [JsonPropertyName("is_genesis")]
     public bool GenesisBlock { get; set; } 

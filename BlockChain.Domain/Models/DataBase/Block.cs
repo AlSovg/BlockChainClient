@@ -13,11 +13,11 @@ public class Block : DbEntity
     
     [Column("cur_hash")]
     [JsonPropertyName("current_hash")]
-    public string CurHash { get; set; } = string.Empty;
+    public string? CurHash { get; set; } = string.Empty;
     
     [Column("prev_hash")]
     [JsonPropertyName("prev_hash")]
-    public string PrevHash { get; set; } = string.Empty;
+    public string? PrevHash { get; set; } = string.Empty;
     
     [Column("is_genesis")]
     [JsonPropertyName("is_genesis")]
